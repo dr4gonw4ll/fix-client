@@ -104,3 +104,45 @@ a.createSocket()
 @atexit.register
 def exitregister():
     clobj.close()
+
+    
+import socket
+import threading
+import requests
+import time
+from datetime import datetime
+from datetime import timedelta
+class client():
+
+    def hearbeat(self):
+        while True:
+            if self.counter + timedelta(seconds=5) < datetime.now():
+                res = requests.get("http://demo.testfire.net/")
+                print(res.cookies)
+                self.counter = datetime.now()
+            else:
+                continue
+        return
+    
+    def acceptInput(self):
+        while True:
+            mesg = input("FIX:>")
+            self.counter = datetime.now()
+        return
+           
+    def __init__(self):
+        self.flag = True
+        self.counter = datetime.now()
+        event = threading.Event()
+        with socket.socket() as s:
+            try:
+                s.connect(("127.0.0.1",9878))
+            except:
+                print("Error creating")
+            x = threading.Thread(target = self.acceptInput)
+            x.start()
+            y = threading.Thread(target = self.hearbeat)
+            y.start()
+            
+            
+c = client()
