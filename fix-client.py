@@ -86,29 +86,29 @@ class socketConnect():
             self.received_message = self.s.recv(4096)
             self.resp_mesg.append_buffer(self.received_message)
             self.resp_mesg = self.resp_mesg.get_message()
-            print(Fore.GREEN+"Received:\r\n"+str(self.resp_mesg))
+            print(Fore.GREEN+"\r\nReceived:\r\n"+str(self.resp_mesg))
             if self.resp_mesg.get(35,1).decode('utf-8') == "0":
-                print("Hearbeat Response")
+                print("\r\n\r\nHearbeat Response")
             elif self.resp_mesg.get(35,1).decode('utf-8') == "1":
-                print("Test Request")
+                print("\r\n\r\nTest Request")
                 self.testreqid = self.resp_mesg.get(112,1)
                 self.testRequest(self.testreqid)
             elif self.resp_mesg.get(35,1).decode('utf-8') == "2":
-                print("send resend request")
+                print("\r\n\r\nsend resend request")
             elif self.resp_mesg.get(35,1).decode('utf-8') == "3":
-                print("Message Rejected, Exiting the program")
+                print("\r\n\r\nMessage Rejected, Exiting the program")
                 exit(1)
             elif self.resp_mesg.get(35,1).decode('utf-8') == "4":
-                print("Sequence Reset..")
+                print("\r\n\r\nSequence Reset..")
             elif self.resp_mesg.get(35,1).decode('utf-8') == "5":
-                print("Logout")
+                print("\r\n\r\nLogout")
             elif self.resp_mesg.get(35,1).decode('utf-8') == "A":
-                print("Logged in successfully")
+                print("\r\n\r\nLogged in successfully")
             elif self.resp_mesg.get(35,1).decode('utf-8') == "D":
-                print("Order Single ")
+                print("\r\n\r\nOrder Single ")
             else:
                 print(self.resp_mesg)
-                print("Proceed based on response value of 35")
+                print("\r\n\r\nProceed based on response value of 35")
                 del self.resp_mesg
                 self.resp_mesg = simplefix.FixParser()
 
@@ -137,11 +137,11 @@ class socketConnect():
     def hearbeat(self):
         while True:
 
-            if self.counter + timedelta(seconds=5) < datetime.now():
+            if self.counter + timedelta(seconds=30) < datetime.now():
                 print(1)
                 self.header_fix_message = self.header()
                 self.header_fix_message.append_pair(35,0)
-                print(Fore.BLUE+"message sent as hearbeat"+str(self.header_fix_message))
+                print(Fore.BLUE+"\r\n\r\nmessage sent as hearbeat"+str(self.header_fix_message))
                 self.s.send(self.header_fix_message.encode())
                 #self.recvMesg()
                 self.counter = datetime.now()
@@ -156,7 +156,7 @@ class socketConnect():
         self.sendMesg(logon_msg)
         #self.recvMesg()
         while True:
-            self.user_fix_mesg = input("FIX:>")
+            self.user_fix_mesg = input("\r\nEnter your FIX Message:")
             
             self.counter = datetime.now()
             self.output = self.processFix(self.user_fix_mesg)
@@ -171,7 +171,7 @@ class socketConnect():
         try:
             self.s.connect(("127.0.0.1",9878))
         except:
-            print("Error connecting to server.")
+            print("\r\nError connecting to server.\r\n")
         x = threading.Thread(target = self.rolling)
         x.start()
         y = threading.Thread(target = self.hearbeat)
