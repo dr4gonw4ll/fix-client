@@ -86,6 +86,7 @@ class socketConnect():
             self.received_message = self.s.recv(4096)
             self.resp_mesg.append_buffer(self.received_message)
             self.resp_mesg = self.resp_mesg.get_message()
+            print(f"\r\n Received: {self.resp_mesg}")
             print(Fore.GREEN+"\r\nReceived:\r\n"+str(self.resp_mesg))
             if self.resp_mesg.get(35,1).decode('utf-8') == "0":
                 print("\r\n\r\nHearbeat Response")
